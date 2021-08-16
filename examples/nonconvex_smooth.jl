@@ -1,10 +1,17 @@
-function next(w, η)
-	return (w + η*sin(2π*w) + 1) % 1
+using Zygote
+n_comp = 2
+function g(w, s=4.0)
+	return 1.0 - s*w*(1-w)
 end
-function dnext(w, η)
-	return 1.0 + 2π*η*cos(2π*w)
+function loss(w, s=4.0)
+	fw = w
+	for n = 1:n_comp
+		fw = g(fw, s)
+	end
+	return fw
 end
-function d2next(w, η)
-	return -2π*2π*η*sin(2π*w)
-end
+grad_loss(w, s=0.4) = gradient(w -> loss(w, s), w)[1]
+next(w, η, s=4.0) = w - η*grad_loss(w, s)
+dnext(w, η, s=4.0) = gradient(w -> next(w, η, s), w)[1]
+d2next(w, η, s=4.0) = gradient(w -> dnext(w, η, s), w)[1]
 
