@@ -1,5 +1,6 @@
+include("../examples/nonconvex_smooth.jl")
 function lyap_exp(w, η)
-	N = 100000
+	N = 20000
 	le = 0.0
 	for n = 1:N
 		le += log(abs(dnext(w, η)))/N
