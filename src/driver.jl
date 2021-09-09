@@ -8,9 +8,9 @@ function lyap_exp(w, η)
 	end
 	return le
 end
-function run(w, η, n)
+function run(w, η, n, s)
 	for i = 1:n
-		w = next(w, η)
+		w = next(w, η, s)
 	end
 	return w
 end
