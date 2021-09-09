@@ -1,4 +1,4 @@
-include("../examples/nonconvex_smooth.jl")
+include("../examples/nonconvex_smooth_noncompact.jl")
 function lyap_exp(w, η)
 	N = 20000
 	le = 0.0
