@@ -66,9 +66,9 @@ function plot_bifurcation()
 	s = 1.0
 	fig, ax = subplots()
 	fig1, ax1 = subplots()
-    wstar = randn(2)
-	w = zeros(2)
-	wplot = zeros(2, npts)
+    wstar = randn(3)
+	w = zeros(3)
+	wplot = zeros(3, npts)
    	i = 1 
 	while i <= npts_η
 		@show i
@@ -79,7 +79,7 @@ function plot_bifurcation()
 		for n = 1:npts-1
 				wplot[:,n+1] = next(wplot[:,n], ηi, s)
 		end
-		@show ηi, maximum(wplot)
+		@show ηi, wplot[:,end]
 		if maximum(wplot) != NaN && minimum(wplot) != NaN 
 			i += 1
 		    ax.plot(ηi*ones(npts), wplot[1,:], "bo", ms=3.0)
@@ -99,8 +99,8 @@ function plot_bifurcation()
 	ax1.yaxis.set_tick_params(labelsize=30)
     return wplot, wstar 
 end
-X = load("goodIC.jld")
-w0 = X["w0"]
-η = 1.0
-max_hess_eigs, min_hess_eigs = plot_hess_eigs(w0, η)
+#X = load("goodIC.jld")
+#w0 = X["w0"]
+#η = 1.0
+#max_hess_eigs, min_hess_eigs = plot_hess_eigs(w0, η)
 
