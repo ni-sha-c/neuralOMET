@@ -1,8 +1,9 @@
 include("../examples/nonconvex_smooth_noncompact.jl")
 function lyap_exp(w, η, s=1.0)
-	N = 20000
+	N = 200000
 	le = 0.0
 	v = rand(2)
+	v ./= norm(v)
 	for n = 1:N
 		v = dnext(w, η, s)*v
 		nv = norm(v)

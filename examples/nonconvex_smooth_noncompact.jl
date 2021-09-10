@@ -1,3 +1,4 @@
+using LinearAlgebra
 function loss(w, s=4.0)
 	return (w[1]*w[2] - s)^2/2
 end

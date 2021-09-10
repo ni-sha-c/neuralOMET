@@ -1,6 +1,38 @@
-include("../src/driver.jl")
+include("../src/general_driver.jl")
 using PyPlot
 using Printf
+using LinearAlgebra
+using JLD
+function plot_hess_eigs(w, η, s=1.0)
+	npts = 50000
+	max_hess_eigs = zeros(npts)
+	min_hess_eigs = zeros(npts)
+	for i = 1:npts
+		d2L = hess_loss(w, s)
+		x = eigvals(d2L)
+		max_hess_eigs[i] = maximum(x)
+		min_hess_eigs[i] = minimum(x)
+		w = next(w, η, s)
+	end
+	fig, ax = subplots()
+	ax.plot(max_hess_eigs, ".", ms=10)
+	ax.xaxis.set_tick_params(labelsize=30)
+	ax.yaxis.set_tick_params(labelsize=30)
+    ax.set_xlabel("step number", fontsize=30)
+	ax.set_ylabel(L"$ \||\nabla^2 L \|| $", fontsize=30)
+    ax.grid(true)
+
+	fig, ax = subplots()
+	ax.plot(min_hess_eigs, ".", ms=10)
+	ax.xaxis.set_tick_params(labelsize=30)
+	ax.yaxis.set_tick_params(labelsize=30)
+    ax.set_xlabel("step number", fontsize=30)
+	ax.set_ylabel(L"$ \||(\nabla^2 L)^{-1}\|| $", fontsize=30)
+    ax.grid(true)
+
+    return max_hess_eigs, min_hess_eigs
+
+end
 function plot_lyapunov_exponents()
 	npts = 10
 	w = rand(npts)
@@ -67,3 +99,8 @@ function plot_bifurcation()
 	ax1.yaxis.set_tick_params(labelsize=30)
     return wplot, wstar 
 end
+X = load("goodIC.jld")
+w0 = X["w0"]
+η = 1.0
+max_hess_eigs, min_hess_eigs = plot_hess_eigs(w0, η)
+
