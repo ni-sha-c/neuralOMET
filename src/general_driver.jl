@@ -3,7 +3,7 @@ include("../examples/linear_deep.jl")
 function lyap_exp(w, η, s=1.0)
 	N = 200000
 	le = 0.0
-	v = rand(2)
+	v = rand(3)
 	v ./= norm(v)
 	for n = 1:N
 		v = dnext(w, η, s)*v

@@ -21,7 +21,7 @@ function plot_hess_eigs(w, η, s=1.0)
     ax.set_xlabel("step number", fontsize=30)
 	ax.set_ylabel(L"$ \||\nabla^2 L \|| $", fontsize=30)
     ax.grid(true)
-
+    ax.set_title("η = $η", fontsize=30)
 	fig, ax = subplots()
 	ax.plot(min_hess_eigs, ".", ms=10)
 	ax.xaxis.set_tick_params(labelsize=30)
@@ -99,8 +99,8 @@ function plot_bifurcation()
 	ax1.yaxis.set_tick_params(labelsize=30)
     return wplot, wstar 
 end
-#X = load("goodIC.jld")
-#w0 = X["w0"]
-#η = 1.0
-#max_hess_eigs, min_hess_eigs = plot_hess_eigs(w0, η)
+X = load("goodIC-deep.jld")
+w0 = X["w0"]
+η = 0.7
+max_hess_eigs, min_hess_eigs = plot_hess_eigs(w0, η)
 
