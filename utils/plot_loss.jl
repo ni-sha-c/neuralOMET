@@ -1,23 +1,17 @@
-include("../src/driver.jl")
+include("../examples/nonconvex_smooth.jl")
 using PyPlot
 using Printf
-function plot_lyapunov_exponents()
-	npts = 10
+function plot_loss_landscape(s=4.0)
+	npts = 10000
 	w = rand(npts)
-	les = rand(npts)
-	η = [0.001,0.01,0.02,0.025,0.05] 
+	lw = rand(npts)
 	fig, ax = subplots()
 	ax.xaxis.set_tick_params(labelsize=30)
 	ax.yaxis.set_tick_params(labelsize=30)
-
-	for (i, ηi) = enumerate(η)
-		w .= rand(npts)
-		@show i, ηi
-		for j = 1:npts
-			les[j] = lyap_exp(w[j], ηi)
-		end
-		ax.plot(w, les, label=latexstring(L"\eta = ",@sprintf("%0.3f", ηi)))
+	for (i, wi) = enumerate(w)
+       lw[i] = loss(wi,s) 
 	end
+	ax.plot(w, lw,".")
 end
 function plot_bifurcation()
 	npts = 50
