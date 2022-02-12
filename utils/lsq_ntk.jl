@@ -25,7 +25,7 @@ function dir_test(d=2, n=300, N=300, ntest=100)
 		W[:,i] ./= nw
 	end
 	a = dir_solve(X, Y, W)
-	return comp_err(a, ntest)
+	return comp_err(a, W, ntest)
 end
 function model_fun(x)
 	betax = dot(β,x)
@@ -44,15 +44,16 @@ function generate_data(n, d)
     return X, Y	
 end
 function form_kernel(X, Y, W)
-	# Form matrix Phi
+	d, N = size(W)
 	Φ = zeros(Nd, n)
+	sNd = sqrt(N*d)
 	for k = 1:n
 		xk = X[:,k]
 		for i = 1:N
 			wi = W[:,i]
 			sp = dot(wi, xk)
 			if (sp > 0)
-				Φ[(i-1)*d+1:i*d,k] = xk
+				Φ[(i-1)*d+1:i*d,k] = xk/sNd
 			end
 		end
 	end
@@ -66,8 +67,21 @@ end
 function it_solve(X, Y, W, η=0.01)
 
 end
-function comp_err(a, n)
+function comp_err(a, W, n)
+	d, N = size(W)
+	X_test = randn(d,n)
+	Y_true = zeros(n)
+	Y = zeros(n)
+	sNd = sqrt(N*d)
+	for i = 1:n
+		Y_true[i] = model_fun(X_test[:,i])
+		for j = 1:N
+			spwx = dot(X_test[:,i], W[:,j])
+			if spwx > 0
+				Y_test[i] += dot(a[(j-1)*d+1:j*d],X_test[:,n])/sNd
+			end
 
-
+		end
+	end
 end
 	
