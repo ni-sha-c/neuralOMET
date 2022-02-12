@@ -32,11 +32,18 @@ for i = 1:N
 	nw = norm(W[:,i])
 	W[:,i] ./= nw
 end
-function train(X, Y, W)
+function form_kernel(X, Y, W)
 	# Form matrix Phi
-	Φ = zeros(n, Nd)
-    for i = 1:Nd
-			
+	Φ = zeros(Nd, n)
+	for k = 1:n
+		xk = X[:,k]
+		for i = 1:N
+			wi = W[:,i]
+			sp = dot(wi, xk)
+			if (sp > 0)
+				Φ[(i-1)*d+1:i*d,k] = xk
+			end
+		end
 	end
 end
 
