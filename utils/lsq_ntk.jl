@@ -1,16 +1,25 @@
 using LinearAlgebra
-# dimension of input
-d = 20
-# number of samples
-n = 3000
-# generate data
-# y_i = f(x_i) + ϵ_i
-# β : fixed unit norm vector 
-β = rand(d)
-β ./= norm(β)
-# Hermite polynomials that go into f
 h1(x) = x
 h2(x) = (x*x - 1)/sqrt(2)
+β = randn(d)
+β ./= norm(β)
+"""
+d : input dimension
+n : no. of samples
+N : no. of neurons
+Ntest : no. of test data points
+
+True data: y_i = f(x_i) + ϵ_i, i <= n
+are interpolated using N neurons and ReLU activations. 
+
+Overparameterization is assumed, so choose d, n and N such that Nd > n.
+
+Test error is the output
+"""
+function dir_test(d=2, n=300, N=300)
+
+
+end
 function generate_data(n, d)
 	X = zeros(d, n)
 	Y = zeros(n)
