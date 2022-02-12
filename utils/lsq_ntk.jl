@@ -1,8 +1,6 @@
 using LinearAlgebra
 h1(x) = x
 h2(x) = (x*x - 1)/sqrt(2)
-β = randn(d)
-β ./= norm(β)
 """
 d : input dimension
 n : no. of samples
@@ -17,7 +15,10 @@ Overparameterization is assumed, so choose d, n and N such that Nd > n.
 Test error is the output
 """
 function dir_test(d=2, n=300, N=300, ntest=100)
-	X, Y = generate_data(n, d)
+    β = randn(d)
+    β ./= norm(β)
+
+	X, Y = generate_data(n, d, β)
 	Nd = N*d
 	W = randn(d,N)
 	for i = 1:N
@@ -27,19 +28,19 @@ function dir_test(d=2, n=300, N=300, ntest=100)
 	a = dir_solve(X, Y, W)
 	return comp_err(a, W, ntest)
 end
-function model_fun(x)
+function model_fun(x, β)
 	betax = dot(β,x)
 	return (sqrt(0.5)*h1(betax) + 
 		   sqrt(0.5)*h2(betax) + 
 		   0.5*randn())
 end
-function generate_data(n, d)
+function generate_data(n, d, β)
 	X = zeros(d, n)
 	Y = zeros(n)
 	for i = 1:n
 		X[:,i] = randn(d) 
 		X[:,i] = X[:,i]/norm(X[:,i])
-		Y[i] =	model_fun(X[:,i])
+		Y[i] =	model_fun(X[:,i], β)
 	end
     return X, Y	
 end
@@ -67,14 +68,14 @@ end
 function it_solve(X, Y, W, η=0.01)
 
 end
-function comp_err(a, W, n)
+function comp_err(a, W, n, β)
 	d, N = size(W)
 	X_test = randn(d,n)
 	Y_true = zeros(n)
 	Y = zeros(n)
 	sNd = sqrt(N*d)
 	for i = 1:n
-		Y_true[i] = model_fun(X_test[:,i])
+			Y_true[i] = model_fun(X_test[:,i],β)
 		for j = 1:N
 			spwx = dot(X_test[:,i], W[:,j])
 			if spwx > 0
