@@ -13,7 +13,7 @@ h1(x) = x
 h2(x) = (x*x - 1)/sqrt(2)
 function generate_data(n, d)
 	X = zeros(d, n)
-	Y = zeros(d)
+	Y = zeros(n)
 	for i = 1:n
 		X[:,i] = randn(d) 
 		X[:,i] = X[:,i]/norm(X[:,i])
@@ -45,11 +45,14 @@ function form_kernel(X, Y, W)
 			end
 		end
 	end
+	return Φ
 end
-
-	end
-	end
-
-
+function dir_solve(X, Y, W)
+	Φ = form_kernel(X, Y, W)
+	K = Φ'*Φ	
+	return Φ*solve(K, Y)
+end
+function it_solve(X, Y, W, η=0.01)
 
 end
+	
