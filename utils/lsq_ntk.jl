@@ -78,10 +78,11 @@ function comp_err(a, W, n)
 		for j = 1:N
 			spwx = dot(X_test[:,i], W[:,j])
 			if spwx > 0
-				Y_test[i] += dot(a[(j-1)*d+1:j*d],X_test[:,n])/sNd
+				Y[i] += dot(a[(j-1)*d+1:j*d],X_test[:,n])/sNd
 			end
 
 		end
 	end
+	return norm((Y_true .- Y)./Y)/sqrt(n)
 end
 	
