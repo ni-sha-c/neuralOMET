@@ -27,16 +27,19 @@ function dir_test(d=2, n=300, N=300, ntest=100)
 	a = dir_solve(X, Y, W)
 	return comp_err(a, ntest)
 end
+function model_fun(x)
+	betax = dot(β,x)
+	return (sqrt(0.5)*h1(betax) + 
+		   sqrt(0.5)*h2(betax) + 
+		   0.5*randn())
+end
 function generate_data(n, d)
 	X = zeros(d, n)
 	Y = zeros(n)
 	for i = 1:n
 		X[:,i] = randn(d) 
 		X[:,i] = X[:,i]/norm(X[:,i])
-		betax = dot(β,X[:,i])
-		Y[i] = sqrt(0.5)*h1(betax) + 
-		       sqrt(0.5)*h2(betax) + 
-			   0.5*randn()
+		Y[i] =	model_fun(X[:,i])
 	end
     return X, Y	
 end
@@ -63,5 +66,8 @@ end
 function it_solve(X, Y, W, η=0.01)
 
 end
+function comp_err(a, n)
 
+
+end
 	
