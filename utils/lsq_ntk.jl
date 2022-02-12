@@ -7,7 +7,7 @@ h2(x) = (x*x - 1)/sqrt(2)
 d : input dimension
 n : no. of samples
 N : no. of neurons
-Ntest : no. of test data points
+ntest : no. of test data points
 
 True data: y_i = f(x_i) + ϵ_i, i <= n
 are interpolated using N neurons and ReLU activations. 
@@ -16,9 +16,16 @@ Overparameterization is assumed, so choose d, n and N such that Nd > n.
 
 Test error is the output
 """
-function dir_test(d=2, n=300, N=300)
-
-
+function dir_test(d=2, n=300, N=300, ntest=100)
+	X, Y = generate_data(n, d)
+	Nd = N*d
+	W = randn(d,N)
+	for i = 1:N
+		nw = norm(W[:,i])
+		W[:,i] ./= nw
+	end
+	a = dir_solve(X, Y, W)
+	return comp_err(a, ntest)
 end
 function generate_data(n, d)
 	X = zeros(d, n)
@@ -32,14 +39,6 @@ function generate_data(n, d)
 			   0.5*randn()
 	end
     return X, Y	
-end
-# number of neurons
-N = 3000
-Nd = N*d
-W = randn(d,N)
-for i = 1:N
-	nw = norm(W[:,i])
-	W[:,i] ./= nw
 end
 function form_kernel(X, Y, W)
 	# Form matrix Phi
@@ -64,4 +63,5 @@ end
 function it_solve(X, Y, W, η=0.01)
 
 end
+
 	
