@@ -13,7 +13,7 @@ function plot_loss_landscape(s=4.0)
 	end
 	ax.plot(w, lw,".")
 end
-function plot_bifurcation()
+function plot_orbits()
 	npts = 50
 	wstar = rand(npts)
 	nSteps = 50000
