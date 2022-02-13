@@ -14,7 +14,7 @@ Overparameterization is assumed, so choose d, n and N such that Nd > n.
 
 Test error is the output
 """
-function dir_test(d=2, n=30, N=300, ntest=100)
+function dir_test(d=2, n=100, N=300, ntest=100)
     β = randn(d)
     β ./= norm(β)
 
@@ -31,9 +31,10 @@ end
 function model_fun(x, β)
 	betax = dot(β,x)
 	sqrthalf = sqrt(0.5)
+	nflag = 0
 	return (sqrthalf*h1(betax) + 
 		   sqrthalf*h2(betax) + 
-		   sqrthalf*randn())
+		   nflag*sqrthalf*randn())
 end
 function generate_data(n, d, β)
 	X = zeros(d, n)
@@ -93,4 +94,4 @@ function comp_err(a, W, n, β)
 	@show Y_true[1:10], Y[1:10]
 	return norm((Y_true .- Y)./Y)/sqrt(n)
 end
-	
+
