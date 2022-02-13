@@ -14,7 +14,7 @@ Overparameterization is assumed, so choose d, n and N such that Nd > n.
 
 Test error is the output
 """
-function dir_test(d=2, n=300, N=300, ntest=100)
+function dir_test(d=2, n=30, N=300, ntest=100)
     β = randn(d)
     β ./= norm(β)
 
@@ -23,31 +23,34 @@ function dir_test(d=2, n=300, N=300, ntest=100)
 	W = randn(d,N)
 	for i = 1:N
 		nw = norm(W[:,i])
-		W[:,i] ./= nw
+		W[:,i] .*= sqrt(d)/nw
 	end
 	a = dir_solve(X, Y, W)
-	return comp_err(a, W, ntest)
+	return comp_err(a, W, ntest, β)
 end
 function model_fun(x, β)
 	betax = dot(β,x)
-	return (sqrt(0.5)*h1(betax) + 
-		   sqrt(0.5)*h2(betax) + 
-		   0.5*randn())
+	sqrthalf = sqrt(0.5)
+	return (sqrthalf*h1(betax) + 
+		   sqrthalf*h2(betax) + 
+		   sqrthalf*randn())
 end
 function generate_data(n, d, β)
 	X = zeros(d, n)
 	Y = zeros(n)
 	for i = 1:n
 		X[:,i] = randn(d) 
-		X[:,i] = X[:,i]/norm(X[:,i])
+		X[:,i] = sqrt(d)*X[:,i]/norm(X[:,i])
 		Y[i] =	model_fun(X[:,i], β)
 	end
     return X, Y	
 end
 function form_kernel(X, Y, W)
 	d, N = size(W)
+    n = size(Y)[1]
+	Nd = N*d
 	Φ = zeros(Nd, n)
-	sNd = sqrt(N*d)
+	sNd = sqrt(Nd)
 	for k = 1:n
 		xk = X[:,k]
 		for i = 1:N
@@ -63,7 +66,7 @@ end
 function dir_solve(X, Y, W)
 	Φ = form_kernel(X, Y, W)
 	K = Φ'*Φ	
-	return Φ*solve(K, Y)
+	return Φ*(K\Y)
 end
 function it_solve(X, Y, W, η=0.01)
 
@@ -75,15 +78,19 @@ function comp_err(a, W, n, β)
 	Y = zeros(n)
 	sNd = sqrt(N*d)
 	for i = 1:n
-			Y_true[i] = model_fun(X_test[:,i],β)
+		X_test[:,i] .*= sqrt(d)/norm(X_test[:,i])
+		Xi = X_test[:,i]
+		Y_true[i] = model_fun(Xi,β)
 		for j = 1:N
-			spwx = dot(X_test[:,i], W[:,j])
+			Wj = W[:,j]
+			spwx = dot(Xi, Wj)
 			if spwx > 0
-				Y[i] += dot(a[(j-1)*d+1:j*d],X_test[:,n])/sNd
+				Y[i] += dot(a[(j-1)*d+1:j*d],Xi)/sNd
 			end
 
 		end
 	end
+	@show Y_true[1:10], Y[1:10]
 	return norm((Y_true .- Y)./Y)/sqrt(n)
 end
 	
